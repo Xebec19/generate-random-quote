@@ -16,10 +16,18 @@ const httpsAgent = new https.Agent({
   rejectUnauthorized: false,
 });
 
-async function generateRandomeQuote(limit = 10) {
+async function generateRandomeQuote(limit = 10, wordLimit) {
   const start = process.hrtime.bigint();
   try {
-    const response = await axios.request({ url: QUOTE_URL, httpsAgent });
+    const wordLimitFilter =
+      wordLimit && !isNaN(wordLimit) && wordLimit < 100
+        ? "&maxLength=" + wordLimit
+        : "";
+
+    const response = await axios.request({
+      url: QUOTE_URL + wordLimit,
+      httpsAgent,
+    });
 
     const data = response.data;
 
